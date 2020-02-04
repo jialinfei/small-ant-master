@@ -9,7 +9,9 @@ import (
 	model "small-ant-parent/small-ant-model"
 )
 
-func Info(c *gin.Context) {
+type User struct{}
+
+func (User) Info(c *gin.Context) {
 	username := response_common.GetQueryToStr(c, "username")
 	password := response_common.GetQueryToStr(c, "password")
 	if username == "" || password == "" {
@@ -31,7 +33,7 @@ func Info(c *gin.Context) {
 	response_common.ResSuccess(c, &user)
 }
 
-func Login(c *gin.Context) {
+func (User) Login(c *gin.Context) {
 	requestData, err := c.GetRawData()
 	if err != nil {
 		response_common.ResErrSrv(c, err)
