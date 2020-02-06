@@ -7,25 +7,22 @@ import (
 	"small-ant-parent/small-ant-commn/database"
 	"small-ant-parent/small-ant-commn/response.common"
 	model "small-ant-parent/small-ant-model"
+	small_ant_service "small-ant-parent/small-ant-service"
 )
 
-type User struct{}
+type UserController struct{}
 
-func (User) Info(c *gin.Context) {
+var userService = new(small_ant_service.UserService)
+
+func (UserController) Info(c *gin.Context) {
 	username := response_common.GetQueryToStr(c, "username")
 	password := response_common.GetQueryToStr(c, "password")
 	if username == "" || password == "" {
 		response_common.ResFail(c, "用户名或密码不能为空")
 		return
 	}
-	where := model.User{Username: username}
-	user := model.User{}
-	notFound, err := database.First(&where, &user)
+	user, err := userService.Info(&model.User{Username: username})
 	if err != nil {
-		if notFound {
-			response_common.ResFail(c, "没用此用户")
-			return
-		}
 		response_common.ResErrSrv(c, err)
 		logger.Error(err)
 		return
@@ -33,7 +30,7 @@ func (User) Info(c *gin.Context) {
 	response_common.ResSuccess(c, &user)
 }
 
-func (User) Login(c *gin.Context) {
+func (UserController) Login(c *gin.Context) {
 	requestData, err := c.GetRawData()
 	if err != nil {
 		response_common.ResErrSrv(c, err)
@@ -51,9 +48,8 @@ func (User) Login(c *gin.Context) {
 		response_common.ResFail(c, "用户名或密码不能为空")
 		return
 	}
-	where := model.User{Username: "张山"}
 	user := model.User{}
-	notFound, err := database.First(&where, &user)
+	notFound, err := database.First(&model.User{Username: "张山"}, &user)
 	if err != nil {
 		if notFound {
 			response_common.ResFail(c, "没用此用户")

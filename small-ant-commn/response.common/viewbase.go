@@ -1,18 +1,19 @@
 package response_common
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 const (
-	SUCCESS_CODE          = 20000      //成功的状态码
-	FAIL_CODE             = 30000      //失败的状态码
+	SUCCESS_CODE          = 200        //成功的状态码
+	FAIL_CODE             = 500        //失败的状态码
 	MD5_PREFIX            = "jkfldfsf" //MD5加密前缀字符串
 	TOKEN_KEY             = "X-Token"  //页面token键名
 	USER_ID_Key           = "X-USERID" //页面用户ID键名
 	USER_UUID_Key         = "X-UUID"   //页面UUID键名
-	SUPER_ADMIN_ID uint64 = 956986 // 超级管理员账号ID
+	SUPER_ADMIN_ID uint64 = 956986     // 超级管理员账号ID
 )
 
 type ResponseModel struct {
@@ -58,7 +59,7 @@ func ResJSON(c *gin.Context, status int, v interface{}) {
 
 // 响应错误-服务端故障
 func ResErrSrv(c *gin.Context, err error) {
-	ret := ResponseModelBase{Code: FAIL_CODE, Message: "服务端故障"}
+	ret := ResponseModelBase{Code: FAIL_CODE, Message: fmt.Sprintf("系统异常:%s", err)}
 	ResJSON(c, http.StatusOK, &ret)
 }
 

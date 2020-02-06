@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterRouterSetting(app *gin.RouterGroup) {
-	user := controller.User{}
+	user := controller.UserController{}
 	app.GET("/user/get", user.Info)
 	app.POST("/user/login", user.Login)
 }
