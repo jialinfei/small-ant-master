@@ -1,5 +1,5 @@
 web:
-    static_path: 
+    static_path: /small-ant-web/
     port: 8080
     domain: 127.0.0.1:8080
     read_timeout: 5

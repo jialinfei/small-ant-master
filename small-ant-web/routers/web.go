@@ -1,10 +1,12 @@
 package routers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/it234/goapp/pkg/convert"
 	"github.com/it234/goapp/pkg/logger"
 	"net/http"
+	"os"
 	"small-ant-parent/small-ant-commn/config"
 	"small-ant-parent/small-ant-commn/middleware"
 	"time"
@@ -35,7 +37,11 @@ func initWeb(config *config.Config) {
 	app := gin.New()
 	app.NoRoute(middleware.NoRouteHandler())
 	// 崩溃恢复
+	path, _ := os.Getwd()
 	app.Use(middleware.RecoveryMiddleware())
+	app.LoadHTMLGlob(fmt.Sprintf("%s%s%s", path, config.Web.StaticPath, "view/*.html"))
+	app.Static("/static", fmt.Sprintf("%s%s%s", path, config.Web.StaticPath, "view/static"))
+	app.Static("/resource", fmt.Sprintf("%s%s%s", path, config.Web.StaticPath, "view/resource"))
 	RegisterRouter(app)
 	go initHTTPServer(config, app)
 }
